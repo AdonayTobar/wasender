@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WA Sender</title>
+    
+
+<script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuración de fuente Inter (preferida) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6; /* Fondo gris muy suave */
+        }
+        
+        /* Estilos mejorados para los botones principales */
+        .primary-button {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Estilo para los ítems de contacto */
+        .contact-item {
+            transition: all 0.2s ease;
+        }
+        .contact-item:hover {
+            background-color: #F9FAFB;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // ÚNICO AZUL (AZUL OSCURO, CORPORATIVO)
+                        'brand-blue': '#2C5282',
+                        // ÚNICO VERDE (ÉXITO)
+                        'brand-success': '#10B981',
+                        // ÚNICO ROJO (PELIGRO/SALIR)
+                        'brand-danger': '#EF4444',
+                        // ÚNICO NARANJA/ÁMBAR (ACENTO/PROYECTO/MODIFICAR/DETALLES)
+                        'brand-accent': '#FBBF24', 
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="p-4 min-h-screen flex items-start justify-center">
+
+    
+
+<div id="crm-app-container" class="max-w-6xl w-full bg-white shadow-2xl border border-gray-100 rounded-xl p-8 space-y-8 mt-6 hidden">
+        
+        <!-- NUEVO: BARRA DE NAVEGACIÓN SUPERIOR PROFESIONAL -->
+        <nav class="flex justify-between items-center py-4 border-b border-gray-100">
+            <!-- Logo -->
+            <h1 class="text-3xl font-extrabold text-gray-900">
+                <span class="text-brand-blue">WA Sender</span>
+            </h1>
+            
+            <!-- Botones de Perfil y Salir -->
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleProfileView()" 
+                        id="profileButton"
+                        class="primary-button text-sm font-semibold px-3 py-2 bg-blue-50 text-brand-blue hover:bg-brand-blue hover:text-white shadow-md border border-blue-100">
+                    <span>Perfil</span>
+                </button>
+                <button onclick="logout()" 
+                        class="primary-button text-sm text-white font-semibold px-3 py-2 bg-brand-danger hover:bg-red-600 shadow-md">
+                    <span>Salir</span>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- NUEVO: BANNER DE BIENVENIDA PROFESIONAL -->
+        <div class="bg-brand-blue/10 p-4 rounded-lg border border-brand-blue/30 shadow-inner">
+            <p class="text-md font-medium text-gray-700">
+                Hola <span id="currentUserName" class="text-brand-blue font-extrabold">Usuario</span>, un gusto tenerte de nuevo.
+            </p>
+        </div>
+
+
+        
+
+<div id="main-crm-content" class="space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+                
+
+<div class="lg:col-span-1 space-y-6">
+                    
+                    
+
+<div class="card p-6 rounded-xl space-y-3 bg-white shadow-xl border border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800 border-b pb-2">
+                            Administrar Categorías
+                        </h2>
+                        <div class="flex space-x-2">
+                            <input type="text" id="newCategoryName" placeholder="Nueva categoría (Ej: VIP)"
+                                   class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+                            <button onclick="addCategory()"
+                                    class="p-3 rounded-lg bg-brand-blue text-white font-semibold text-sm hover:bg-brand-blue/90 transition duration-200 shadow-md">
+                                Crear
+                            </button>
+                        </div>
+                        <div id="categoryBadges" class="flex flex-wrap gap-2 pt-3">
+                            
+
+</div>
+                    </div>
+
+                    
+
+<div id="addEditContactSection" class="card p-6 rounded-xl space-y-4 bg-white shadow-xl border border-gray-200">
+                        <h2 id="formTitle" class="text-xl font-bold text-gray-800 border-b pb-2">
+                            Agregar Nuevo Contacto
+                        </h2>
+                        
+                        
+
+<input type="text" id="inputFirstName" placeholder="Nombre"
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+                        <input type="text" id="inputLastName" placeholder="Apellido"
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+                        
+
+<input type="text" id="inputPhone" placeholder="Teléfono (8 dígitos, ej: 78451234)"
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+                        
+                        
+
+<input type="text" id="inputAddress" placeholder="Dirección Completa (Obligatorio)"
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+
+
+                        
+
+<div class="p-3 border border-gray-200 rounded-lg max-h-40 overflow-y-auto bg-gray-50">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                Categorías:
+                            </label>
+                            <div id="categoryCheckboxes" class="space-y-1">
+                                
+
+</div>
+                        </div>
+
+                        
+
+<div id="projectFieldsContainer" class="p-4 bg-brand-accent/10 border border-brand-accent/50 rounded-lg space-y-3 hidden shadow-inner">
+                            <h3 class="text-sm font-bold text-brand-accent">Detalles de Proyecto:</h3>
+                            <input type="text" id="inputProjectLocation" placeholder="Lugar del Proyecto"
+                                class="w-full p-3 border border-brand-accent/50 rounded-lg focus:ring-2 ring-brand-accent focus:border-brand-accent text-sm shadow-sm" />
+                            <input type="text" id="inputProjectStatus" placeholder="Estado del Proyecto"
+                                class="w-full p-3 border border-brand-accent/50 rounded-lg focus:ring-2 ring-brand-accent focus:border-brand-accent text-sm shadow-sm" />
+                        </div>
+
+                        <div class="flex space-x-3 pt-2">
+                            <button id="addEditButton" onclick="addOrUpdateContact()"
+                                    class="flex-1 p-3 rounded-lg bg-brand-blue text-white font-semibold text-sm hover:bg-brand-blue/90 transition duration-200 shadow-lg">
+                                Guardar Contacto
+                            </button>
+                            <button id="cancelEditButton" onclick="cancelEdit()"
+                                    class="hidden p-3 rounded-lg bg-gray-500 text-white font-semibold text-sm hover:bg-gray-600 transition duration-200 shadow-md">
+                                Cancelar Edición
+                            </button>
+                        </div>
+                    </div>
+
+                    
+
+<div class="card p-6 rounded-xl space-y-3 bg-white shadow-xl border border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800 border-b pb-2">
+                            Plantilla de Mensaje
+                        </h2>
+                        
+                        <label class="block text-sm font-medium text-gray-700">
+                            Arrastra y suelta variables:
+                        </label>
+                        <div class="flex flex-wrap space-x-2 mb-2">
+                            <span draggable="true" ondragstart="dragStart(event, '{{Nombre}}')"
+                                  class="draggable-item bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full border border-blue-300 shadow-sm cursor-grab hover:bg-blue-200">
+                                Nombre
+                            </span>
+                            <span draggable="true" ondragstart="dragStart(event, '{{Apellido}}')"
+                                  class="draggable-item bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full border border-blue-300 shadow-sm cursor-grab hover:bg-blue-200">
+                                Apellido
+                            </span>
+                             <span draggable="true" ondragstart="dragStart(event, '{{Dirección}}')"
+                                  class="draggable-item bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full border border-blue-300 shadow-sm cursor-grab hover:bg-blue-200">
+                                Dirección
+                            </span>
+                        </div>
+
+                        <textarea id="messageTemplate" placeholder="Hola {{Nombre}}, te contacto por..." rows="6"
+                                  ondragover="allowDrop(event)" ondrop="drop(event)"
+                                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-success focus:border-brand-success transition duration-150 shadow-inner"></textarea>
+                    </div>
+                </div>
+
+                
+
+<div class="lg:col-span-2 space-y-6">
+                    
+
+<div class="card p-6 rounded-xl space-y-4 bg-white shadow-xl border border-gray-200">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h2 class="text-xl font-bold text-gray-800">
+                                Contactos
+                            </h2>
+                            <button onclick="clearContacts()" class="text-sm text-brand-danger hover:text-red-700 font-semibold transition">
+                                Limpiar Todos
+                            </button>
+                        </div>
+
+                        
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <input type="text" id="searchClient" oninput="filterAndSearchContacts()" placeholder="Buscar por Nombre/Teléfono..."
+                                   class="col-span-2 p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+                            <select id="filterCategory" onchange="filterAndSearchContacts()"
+                                    class="col-span-1 p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm bg-white">
+                                
+
+</select>
+                        </div>
+
+                        
+
+<div id="contactList" class="bg-white border border-gray-200 rounded-lg shadow-inner max-h-[600px] overflow-y-auto mt-4 divide-y divide-gray-100">
+                            <p class="text-gray-500 italic p-6 text-center">Aún no hay contactos registrados.</p>
+                        </div>
+                    </div>
+                    
+                    
+
+<div class="card p-6 rounded-xl space-y-4 bg-white shadow-xl border border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800 border-b pb-2">
+                            Portabilidad (CSV)
+                        </h2>
+                        <p class="text-sm text-gray-600">Descarga o fusiona tus contactos para sincronizar data.</p>
+                        
+                        
+
+<button onclick="exportContactsToCsv()"
+                                class="w-full p-3 rounded-lg bg-brand-success text-white font-semibold text-sm hover:bg-brand-success/90 transition duration-200 shadow-md flex items-center justify-center space-x-2">
+                            <span>Descargar Todos (CSV)</span>
+                        </button>
+
+                        
+
+<div>
+                            <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleFileUpload(event)">
+                            <button onclick="document.getElementById('csvFileInput').click()"
+                                    class="w-full p-3 rounded-lg bg-brand-blue text-white font-semibold text-sm hover:bg-brand-blue/90 transition duration-200 shadow-md flex items-center justify-center space-x-2">
+                                <span>Cargar y Fusionar CSV</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+<div id="view-profile" class="space-y-4 hidden pt-8 max-w-lg mx-auto">
+            <div class="flex justify-end">
+                <button onclick="toggleProfileView()" 
+                    class="primary-button text-sm text-gray-700 hover:text-gray-900 bg-gray-200 hover:bg-gray-300 px-4 py-2">
+                    ← Volver
+                </button>
+            </div>
+            <div class="card p-8 rounded-xl space-y-5 bg-brand-blue border border-brand-blue/50 shadow-xl">
+                <h2 class="text-2xl font-extrabold text-white border-b border-brand-blue/70 pb-3">
+                    Mi Perfil
+                </h2>
+                
+                <div>
+                    <label for="profileUsername" class="block text-sm font-bold text-white mb-1">Nombre de Usuario</label>
+                    <input type="text" id="profileUsername" placeholder="Tu Nombre"
+                           class="w-full p-3 border border-brand-blue/50 rounded-lg focus:ring-2 ring-white focus:border-white text-sm" />
+                </div>
+                
+                <div>
+                    <label for="profileEmail" class="block text-sm font-bold text-white mb-1">Correo Electrónico</label>
+                    <input type="email" id="profileEmail" placeholder="correo@galvanissa.com"
+                           class="w-full p-3 border border-brand-blue/50 rounded-lg focus:ring-2 ring-white focus:border-white text-sm" />
+                </div>
+
+                <div>
+                    <label for="profilePassword" class="block text-sm font-bold text-white mb-1">Nueva Contraseña (Dejar vacío para no cambiar)</label>
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                        <input type="password" id="profilePassword" placeholder="********"
+                               class="flex-1 p-3 border border-brand-blue/50 rounded-lg focus:ring-2 ring-white focus:border-white text-sm" />
+                        
+
+<button onclick="showSavedPassword()" class="px-3 py-3 bg-white text-brand-blue text-sm font-bold rounded-lg hover:bg-gray-200 transition shadow-md flex-shrink-0">
+                            Contraseña Guardada
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="updateProfile()"
+                        class="w-full p-3 rounded-lg bg-gray-700 text-white font-extrabold text-sm hover:bg-gray-600 transition duration-200 shadow-xl">
+                    Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+
+    
+
+<div id="auth-app-container" class="max-w-md w-full bg-white shadow-2xl border border-gray-100 rounded-xl p-8 space-y-6 mt-20">
+        <header class="text-center space-y-2">
+            <h1 class="text-3xl font-extrabold text-gray-900">
+                Bienvenido a <span class="text-brand-blue">WA Sender</span>
+            </h1>
+            <p class="text-sm text-gray-500">
+                Inicia sesión o regístrate con tu cuenta profesional.
+            </p>
+        </header>
+
+        
+
+<div class="flex border-b border-gray-200">
+            <button id="auth-tab-login" onclick="showAuthTab('login')" class="flex-1 py-3 text-sm font-extrabold border-b-2 border-brand-blue text-brand-blue transition duration-150">
+                Iniciar Sesión
+            </button>
+            <button id="auth-tab-register" onclick="showAuthTab('register')" class="flex-1 py-3 text-sm font-extrabold border-b-2 border-transparent text-gray-500 hover:border-brand-blue/50 hover:text-brand-blue transition duration-150">
+                Registrarse
+            </button>
+        </div>
+
+        
+
+<div id="auth-view-login" class="space-y-4">
+            <input type="email" id="loginEmail" placeholder="Correo Electrónico"
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+            
+            <div class="relative">
+                <input type="password" id="loginPassword" placeholder="Contraseña"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm pr-3 shadow-sm" />
+                
+
+</div>
+
+            <button onclick="login()"
+                    class="w-full p-3 rounded-lg bg-brand-blue text-white font-extrabold hover:bg-brand-blue/90 transition duration-200 shadow-xl">
+                Ingresar
+            </button>
+        </div>
+
+        
+
+<div id="auth-view-register" class="space-y-4 hidden">
+            <input type="text" id="regUsername" placeholder="Nombre de Usuario"
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+            <input type="email" id="regEmail" placeholder="Correo Electrónico (@galvanissa.com)"
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+            
+            <div class="relative">
+                <input type="password" id="regPassword" placeholder="Contraseña"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm pr-3 shadow-sm" />
+                
+
+</div>
+            
+            <div class="relative">
+                <input type="password" id="regConfirmPassword" placeholder="Confirmar Contraseña"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm pr-3 shadow-sm" />
+                
+
+</div>
+
+            <button onclick="register()"
+                    class="w-full p-3 rounded-lg bg-brand-blue text-white font-extrabold hover:bg-brand-blue/90 transition duration-200 shadow-xl">
+                Crear Cuenta
+            </button>
+        </div>
+    </div>
+
+    
+
+<div id="customModalOverlay" class="fixed inset-0 z-50 hidden items-center justify-center transition-opacity duration-300 bg-gray-900 bg-opacity-70 backdrop-blur-sm">
+        <div class="bg-white rounded-xl p-6 w-11/12 max-w-sm shadow-2xl border-t-4 border-brand-blue transform scale-100 transition-transform duration-300">
+            <h3 class="text-xl font-bold text-gray-900 mb-2" id="modalTitle">Confirmación Necesaria</h3>
+            <p class="text-md text-gray-600 mb-5" id="modalMessage">¿Estás seguro de que quieres realizar esta acción?</p>
+            <div class="flex justify-end space-x-3">
+                <button id="modalCancelButton" onclick="modalCancel()" class="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-300 transition shadow-md">
+                    Cancelar
+                </button>
+                <button id="modalConfirmButton" onclick="modalConfirm()" class="px-4 py-2 bg-brand-blue text-white text-sm font-semibold rounded-lg hover:bg-brand-blue/90 transition shadow-md">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    
+
+<div id="projectDetailsModal" class="fixed inset-0 z-50 hidden items-center justify-center transition-opacity duration-300 bg-gray-900 bg-opacity-70 backdrop-blur-sm">
+        <div class="bg-white rounded-xl p-8 w-11/12 max-w-lg shadow-2xl border-t-4 border-brand-accent transform scale-100 transition-transform duration-300 space-y-6">
+            <h3 class="text-2xl font-bold text-gray-900 border-b pb-2 flex justify-between items-center">
+                Detalles del Proyecto
+                <button onclick="closeProjectDetailsModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm font-semibold text-gray-500 uppercase">Cliente</p>
+                    <p class="text-xl font-extrabold text-gray-800" id="modalClientName">Nombre Cliente</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 uppercase">Ubicación</p>
+                        <p class="text-lg font-medium text-gray-700" id="modalProjectLocation">...</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-500 uppercase">Estado</p>
+                        <p class="text-lg font-medium text-gray-700" id="modalProjectStatus">...</p>
+                    </div>
+                </div>
+                
+                <hr class="border-gray-100">
+
+                <div>
+                    <p class="text-sm font-semibold text-gray-500 uppercase">Dirección Completa</p>
+                    <p class="text-base text-gray-600" id="modalClientAddress">...</p>
+                </div>
+            </div>
+
+            <button onclick="closeProjectDetailsModal()" 
+                    class="w-full p-3 rounded-lg bg-brand-accent text-white font-extrabold hover:bg-brand-accent/90 transition duration-200 shadow-lg">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- VARIABLES GLOBALES Y CONSTANTES ---
+        const USERS_KEY = 'galvanissaCrmUsers';
+        const CURRENT_USER_ID_KEY = 'galvanissaCrmActiveID';
+        const CATEGORIES_SUFFIX = '_categories';
+        const DOMAIN_REQUIRED = '@galvanissa.com';
+        const MAX_CONTACTS = 200;
+        const DEFAULT_CATEGORY = 'Todos los clientes';
+        const PROJECT_CATEGORY = 'Proyecto';
+        const SV_COUNTRY_CODE = '503'; 
+
+        // Estado de la aplicación
+        let state = {
+            isLoggedIn: false,
+            activeUserID: null, 
+            activeUser: null,
+            isProfileView: false, 
+        };
+
+        let contacts = [];         
+        let userCategories = [];   
+        let editingIndex = -1;     
+        let modalCallback = null;  
+        let isModalConfirmation = false; 
+
+        // --- GESTIÓN DE VISTAS Y ESTADO ---
+
+        function renderApp() {
+            const authContainer = document.getElementById('auth-app-container');
+            const crmContainer = document.getElementById('crm-app-container');
+
+            if (state.isLoggedIn) {
+                authContainer.classList.add('hidden');
+                crmContainer.classList.remove('hidden');
+                
+                document.getElementById('currentUserName').textContent = `${state.activeUser.username}`;
+                
+                loadUserCategories();
+                loadContactsForActiveUser();
+                loadProfileEditor();
+                
+                document.getElementById('main-crm-content').classList.remove('hidden');
+                document.getElementById('view-profile').classList.add('hidden');
+                state.isProfileView = false;
+                
+                showCustomMessage(`Sesión iniciada como ${state.activeUser.username}.`, 'Información', false);
+            } else {
+                crmContainer.classList.add('hidden');
+                authContainer.classList.remove('hidden');
+                showAuthTab('login');
+                showCustomMessage('Esperando inicio de sesión.', 'Información', false);
+            }
+        }
+        
+        /**
+         * Muestra u oculta la vista de edición de perfil.
+         */
+        function toggleProfileView() {
+            state.isProfileView = !state.isProfileView;
+            const mainContent = document.getElementById('main-crm-content');
+            const profileView = document.getElementById('view-profile');
+            const profileButton = document.getElementById('profileButton');
+            const welcomeBanner = document.querySelector('.bg-brand-blue\\/10'); // Seleccionar el banner de bienvenida
+
+            if (state.isProfileView) {
+                mainContent.classList.add('hidden');
+                profileView.classList.remove('hidden');
+                welcomeBanner.classList.add('hidden'); // Ocultar banner de bienvenida
+                
+                // Aplicar el estilo de botón activo/seleccionado (azul solido)
+                profileButton.classList.remove('bg-blue-50', 'text-brand-blue', 'hover:text-white', 'border-blue-100');
+                profileButton.classList.add('bg-brand-blue', 'text-white', 'hover:bg-brand-blue/90', 'border-transparent');
+            } else {
+                mainContent.classList.remove('hidden');
+                profileView.classList.add('hidden');
+                welcomeBanner.classList.remove('hidden'); // Mostrar banner de bienvenida
+                
+                // Aplicar el estilo de botón inactivo (transparente)
+                profileButton.classList.remove('bg-brand-blue', 'text-white', 'hover:bg-brand-blue/90', 'border-transparent');
+                profileButton.classList.add('bg-blue-50', 'text-brand-blue', 'hover:text-white', 'border-blue-100');
+            }
+        }
+
+        /**
+         * Maneja la visibilidad de los campos condicionales "Proyecto".
+         */
+        function handleCategoryChange() {
+            const projectCheckbox = document.getElementById(`cat-${PROJECT_CATEGORY}`);
+            const fieldsContainer = document.getElementById('projectFieldsContainer');
+            
+            if (!projectCheckbox) return; 
+
+            if (projectCheckbox.checked) {
+                fieldsContainer.classList.remove('hidden');
+            } else {
+                fieldsContainer.classList.add('hidden');
+                document.getElementById('inputProjectLocation').value = '';
+                document.getElementById('inputProjectStatus').value = '';
+            }
+        }
+        
+        /**
+         * Muestra la pestaña activa en la vista de Autenticación (Login o Register).
+         */
+        function showAuthTab(tabName) {
+            const views = ['login', 'register'];
+            views.forEach(view => {
+                document.getElementById(`auth-view-${view}`).classList.add('hidden');
+                const button = document.getElementById(`auth-tab-${view}`);
+                if (button) {
+                    if (view === tabName) {
+                        button.classList.remove('border-transparent', 'text-gray-500', 'hover:border-brand-blue/50', 'hover:text-brand-blue');
+                        button.classList.add('border-brand-blue', 'text-brand-blue');
+                    } else {
+                        button.classList.add('border-transparent', 'text-gray-500', 'hover:border-brand-blue/50', 'hover:text-brand-blue');
+                        button.classList.remove('border-brand-blue', 'text-brand-blue');
+                    }
+                }
+            });
+            document.getElementById(`auth-view-${tabName}`).classList.remove('hidden');
+        }
+
+        // --- GESTIÓN DE ALMACENAMIENTO (USUARIOS, CONTACTOS Y CATEGORÍAS) ---
+
+        function loadUsers() {
+            try {
+                const users = localStorage.getItem(USERS_KEY);
+                return users ? JSON.parse(users) : {};
+            } catch (e) {
+                showCustomMessage('Error al cargar usuarios. Iniciando lista vacía.', 'Error', true);
+                return {};
+            }
+        }
+
+        function saveUsers(users) {
+            try {
+                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+            } catch (e) {
+                showCustomMessage('Error al guardar usuarios.', 'Error', true);
+            }
+        }
+        
+        function getContactsStorageKey() {
+            return `galvanissaContacts_${state.activeUserID}`;
+        }
+        
+        function getCategoriesStorageKey() {
+             return `galvanissaCategories_${state.activeUserID}`;
+        }
+
+        function loadContactsForActiveUser() {
+            if (!state.activeUserID) return;
+            const key = getContactsStorageKey();
+            try {
+                const storedContacts = localStorage.getItem(key);
+                contacts = storedContacts ? JSON.parse(storedContacts) : [];
+                filterAndSearchContacts();
+            } catch (e) {
+                showCustomMessage('Error al cargar contactos. Se iniciará con lista vacía.', 'Error', true);
+                contacts = [];
+            }
+        }
+
+        function saveContacts() {
+            if (!state.activeUserID) return;
+            const key = getContactsStorageKey();
+            try {
+                localStorage.setItem(key, JSON.stringify(contacts));
+                filterAndSearchContacts();
+            } catch (e) {
+                showCustomMessage('Error al guardar contactos. El almacenamiento puede estar lleno.', 'Error', true);
+            }
+        }
+
+        function loadUserCategories() {
+             if (!state.activeUserID) return;
+             const key = getCategoriesStorageKey();
+             try {
+                const storedCategories = localStorage.getItem(key);
+                let loaded = storedCategories ? JSON.parse(storedCategories) : [];
+                
+                loaded = loaded.filter(c => c !== DEFAULT_CATEGORY);
+                
+                userCategories = [DEFAULT_CATEGORY, ...loaded];
+
+                renderCategoryManagement();
+                renderCategorySelectors();
+                handleCategoryChange(); 
+             } catch (e) {
+                showCustomMessage('Error al cargar categorías. Usando valores por defecto.', 'Error', true);
+                userCategories = [DEFAULT_CATEGORY];
+             }
+        }
+
+        function saveUserCategories() {
+             if (!state.activeUserID) return;
+             const key = getCategoriesStorageKey();
+             try {
+                 const categoriesToSave = userCategories.filter(c => c !== DEFAULT_CATEGORY);
+                 localStorage.setItem(key, JSON.stringify(categoriesToSave));
+                 renderCategoryManagement();
+                 renderCategorySelectors();
+                 showCustomMessage('Categorías actualizadas.', 'Información', false);
+             } catch (e) {
+                 showCustomMessage('Error al guardar categorías.', 'Error', true);
+             }
+        }
+
+
+        // --- SEGURIDAD Y AUTENTICACIÓN ---
+        
+        /**
+         * Muestra las credenciales en la consola para el administrador.
+         */
+        function logUserCredentials(user) {
+            console.log(`\n============================================`);
+            console.log(`🔑 CREDENCIALES (SOLO VISTA ADMIN) - ${new Date().toLocaleString()}`);
+            console.log(`============================================`);
+            console.log(`👤 Nombre de Usuario: ${user.username}`);
+            console.log(`✉️ Correo de Registro (ID Permanente): ${user.permanentId}`);
+            console.log(`📧 Correo Actual: ${user.email}`);
+            console.log(`🔒 Contraseña: ${user.password}`); // Contraseña en texto plano para simulación
+            console.log(`============================================\n`);
+        }
+
+        function register() {
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const confirmPassword = document.getElementById('regConfirmPassword').value.trim();
+
+            if (!username || !email || !password || !confirmPassword) {
+                return showCustomMessage('Todos los campos son obligatorios.', 'Error', true);
+            }
+            if (!email.endsWith(DOMAIN_REQUIRED)) {
+                return showCustomMessage(`El correo debe terminar en ${DOMAIN_REQUIRED}.`, 'Error', true);
+            }
+            if (password.length < 6) {
+                return showCustomMessage('La contraseña debe tener al menos 6 caracteres.', 'Error', true);
+            }
+            if (password !== confirmPassword) {
+                return showCustomMessage('Las contraseñas no coinciden.', 'Error', true);
+            }
+            
+            const users = loadUsers();
+            if (users[email]) {
+                return showCustomMessage('Este correo ya está registrado.', 'Error', true);
+            }
+
+            const newUser = { 
+                username: username, 
+                email: email, 
+                password: password, 
+                permanentId: email 
+            };
+
+            users[email] = newUser;
+            saveUsers(users);
+            logUserCredentials(newUser); 
+            
+            state.activeUserID = email;
+            state.activeUser = newUser;
+            state.isLoggedIn = true;
+            localStorage.setItem(CURRENT_USER_ID_KEY, email);
+            
+            // Limpiar formulario
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regConfirmPassword').value = '';
+
+            showCustomMessage(`Registro exitoso para ${username}. Iniciando sesión...`, 'Éxito');
+            renderApp();
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!email || !password) {
+                return showCustomMessage('Correo y contraseña son obligatorios.', 'Error', true);
+            }
+            
+            const users = loadUsers();
+            let foundUserKey = null;
+
+            for (const key in users) {
+                if (key === email || users[key].email === email) {
+                    if (users[key].password === password) {
+                        foundUserKey = key;
+                        break;
+                    }
+                }
+            }
+            
+            if (foundUserKey) {
+                const user = users[foundUserKey];
+                logUserCredentials(user); 
+                
+                state.activeUserID = foundUserKey;
+                state.activeUser = user;
+                state.isLoggedIn = true;
+                localStorage.setItem(CURRENT_USER_ID_KEY, foundUserKey);
+                
+                // Limpiar formulario
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+
+                renderApp();
+            } else {
+                showCustomMessage('Correo o Contraseña incorrectos.', 'Error', true);
+            }
+        }
+
+        function logout() {
+            showCustomConfirmation('¿Estás seguro que deseas cerrar la sesión actual?', () => {
+                state.isLoggedIn = false;
+                state.activeUserID = null;
+                state.activeUser = null;
+                localStorage.removeItem(CURRENT_USER_ID_KEY);
+                contacts = [];
+                userCategories = [];
+                showCustomMessage('Sesión cerrada.', 'Información');
+                renderApp();
+            });
+        }
+
+        function togglePasswordVisibility(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        // --- GESTIÓN DE PERFIL DE USUARIO ---
+
+        function loadProfileEditor() {
+            if (state.activeUser) {
+                document.getElementById('profileUsername').value = state.activeUser.username;
+                document.getElementById('profileEmail').value = state.activeUser.email;
+                document.getElementById('profilePassword').value = ''; 
+            }
+        }
+        
+        /**
+         * Muestra la contraseña guardada en el modal (transparencia).
+         */
+        function showSavedPassword() {
+            if (state.activeUser && state.activeUser.password) {
+                showCustomMessage(`Contraseña actual: ${state.activeUser.password}`, 'Tu Contraseña Guardada', false);
+            } else {
+                 showCustomMessage('No se pudo encontrar la contraseña guardada.', 'Error', true);
+            }
+        }
+
+
+        function updateProfile() {
+            const newUsername = document.getElementById('profileUsername').value.trim();
+            const newEmail = document.getElementById('profileEmail').value.trim();
+            const newPassword = document.getElementById('profilePassword').value.trim();
+
+            if (!newUsername || !newEmail) {
+                return showCustomMessage('Nombre de usuario y correo son obligatorios.', 'Error', true);
+            }
+            if (!newEmail.endsWith(DOMAIN_REQUIRED)) {
+                return showCustomMessage(`El correo debe terminar en ${DOMAIN_REQUIRED}.`, 'Error', true);
+            }
+            if (newPassword && newPassword.length < 6) {
+                return showCustomMessage('La nueva contraseña debe tener al menos 6 caracteres.', 'Error', true);
+            }
+
+
+            showCustomConfirmation('¿Estás seguro de que deseas actualizar tu información de perfil?', () => {
+                const users = loadUsers();
+                const currentID = state.activeUserID; 
+
+                // Si cambia el email, se debe actualizar la clave, si no, se usa la clave actual
+                const oldEmail = state.activeUser.email;
+                const newID = (newEmail !== oldEmail) ? newEmail : currentID;
+
+                state.activeUser.username = newUsername;
+                state.activeUser.email = newEmail;
+                
+                if (newPassword) {
+                    state.activeUser.password = newPassword; 
+                }
+
+                // Si la clave cambia, eliminar la vieja entrada
+                if (newID !== currentID) {
+                    delete users[currentID];
+                    localStorage.setItem(CURRENT_USER_ID_KEY, newID);
+                    state.activeUserID = newID;
+                }
+
+                users[newID] = state.activeUser;
+                saveUsers(users);
+                logUserCredentials(state.activeUser); 
+                
+                document.getElementById('currentUserName').textContent = `${state.activeUser.username}`;
+                document.getElementById('profilePassword').value = '';
+
+                showCustomMessage('¡Perfil actualizado con éxito!', 'Éxito');
+                toggleProfileView(); 
+            });
+        }
+
+
+        // --- MODAL UTILITIES (Reemplazando logMessage y alerts) ---
+
+        /**
+         * Muestra un mensaje simple (no de confirmación) en el modal.
+         */
+        function showCustomMessage(message, title, isError = false) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            
+            const modal = document.getElementById('customModalOverlay').querySelector('div');
+            modal.classList.remove('border-brand-danger', 'border-brand-blue');
+            modal.classList.add(isError ? 'border-brand-danger' : 'border-brand-blue');
+            
+            document.getElementById('modalConfirmButton').classList.add('hidden');
+            document.getElementById('modalCancelButton').textContent = 'Cerrar';
+            
+            document.getElementById('customModalOverlay').classList.remove('hidden');
+            document.getElementById('customModalOverlay').classList.add('flex');
+            isModalConfirmation = false;
+        }
+        
+        /**
+         * Muestra el modal en modo de confirmación.
+         */
+        function showCustomConfirmation(message, callback) {
+            document.getElementById('modalTitle').textContent = 'Confirmación Necesaria';
+            document.getElementById('modalMessage').textContent = message;
+            
+            const modal = document.getElementById('customModalOverlay').querySelector('div');
+            modal.classList.remove('border-brand-danger');
+            modal.classList.add('border-brand-blue');
+
+            document.getElementById('modalConfirmButton').classList.remove('hidden');
+            document.getElementById('modalCancelButton').textContent = 'Cancelar';
+            
+            document.getElementById('customModalOverlay').classList.remove('hidden');
+            document.getElementById('customModalOverlay').classList.add('flex');
+            modalCallback = callback;
+            isModalConfirmation = true;
+        }
+
+        function modalConfirm() {
+            document.getElementById('customModalOverlay').classList.add('hidden');
+            document.getElementById('customModalOverlay').classList.remove('flex');
+            if (modalCallback && isModalConfirmation) {
+                modalCallback();
+            }
+            modalCallback = null;
+            isModalConfirmation = false;
+        }
+
+        function modalCancel() {
+            document.getElementById('customModalOverlay').classList.add('hidden');
+            document.getElementById('customModalOverlay').classList.remove('flex');
+            modalCallback = null;
+            isModalConfirmation = false;
+        }
+        
+        /**
+         * Muestra el modal con los detalles del proyecto.
+         */
+        function showProjectDetailsModal(phone) {
+            const contact = contacts.find(c => c.phone === phone);
+
+            if (!contact || !contact.categories.includes(PROJECT_CATEGORY)) {
+                return showCustomMessage('Este cliente no tiene detalles de proyecto.', 'Aviso', false);
+            }
+
+            document.getElementById('modalClientName').textContent = `${contact.firstName} ${contact.lastName}`;
+            document.getElementById('modalProjectLocation').textContent = contact.projectLocation || 'N/A';
+            document.getElementById('modalProjectStatus').textContent = contact.projectStatus || 'N/A';
+            document.getElementById('modalClientAddress').textContent = contact.address || 'N/A';
+
+
+            document.getElementById('projectDetailsModal').classList.remove('hidden');
+            document.getElementById('projectDetailsModal').classList.add('flex');
+        }
+
+        /**
+         * Cierra el modal de detalles del proyecto.
+         */
+        function closeProjectDetailsModal() {
+            document.getElementById('projectDetailsModal').classList.add('hidden');
+            document.getElementById('projectDetailsModal').classList.remove('flex');
+        }
+
+
+        // --- GESTIÓN DE CATEGORÍAS ---
+
+        function addCategory() {
+            const name = document.getElementById('newCategoryName').value.trim();
+            if (!name) {
+                return showCustomMessage('El nombre de la categoría no puede estar vacío.', 'Error', true);
+            }
+            if (userCategories.map(c => c.toLowerCase()).includes(name.toLowerCase())) {
+                return showCustomMessage(`La categoría "${name}" ya existe.`, 'Error', true);
+            }
+
+            userCategories.push(name);
+            saveUserCategories();
+            document.getElementById('newCategoryName').value = '';
+            showCustomMessage(`Categoría "${name}" creada.`, 'Éxito');
+        }
+
+        function removeCategory(nameToRemove) {
+            if (nameToRemove === DEFAULT_CATEGORY) {
+                return showCustomMessage('La categoría "Todos los clientes" no puede eliminarse.', 'Error', true);
+            }
+
+            showCustomConfirmation(`¿Estás seguro de eliminar la categoría "${nameToRemove}"? Los clientes asociados NO se eliminarán.`, () => {
+                
+                userCategories = userCategories.filter(c => c !== nameToRemove);
+
+                contacts = contacts.map(contact => {
+                    contact.categories = contact.categories.filter(cat => cat !== nameToRemove);
+                    
+                    if (contact.categories.length === 0) {
+                        contact.categories.push(DEFAULT_CATEGORY);
+                    }
+                    
+                    if (nameToRemove === PROJECT_CATEGORY) {
+                        delete contact.projectLocation;
+                        delete contact.projectStatus;
+                    }
+
+                    return contact;
+                });
+
+                saveContacts();
+                saveUserCategories();
+                showCustomMessage(`Categoría "${nameToRemove}" eliminada.`, 'Éxito');
+            });
+        }
+        
+        /**
+         * Renderiza los badges de gestión de categorías.
+         */
+        function renderCategoryManagement() {
+            const container = document.getElementById('categoryBadges');
+            container.innerHTML = '';
+
+            userCategories.forEach(category => {
+                const isDefault = category === DEFAULT_CATEGORY;
+                const deleteButton = isDefault ? '' : `
+                    <button onclick="removeCategory('${category}')" 
+                            class="ml-1 text-red-400 hover:text-red-600 font-bold transition">
+                        ✕
+                    </button>`;
+                
+                // Estilo único para badges de categorías personalizadas (Azul transparente)
+                const style = isDefault ? 'bg-gray-100 text-gray-700 border-gray-300' : 'bg-brand-blue/10 text-brand-blue border-brand-blue/30';
+
+                const badge = `
+                    <span class="flex items-center text-xs font-semibold px-3 py-1 rounded-full ${style} border">
+                        ${category}
+                        ${deleteButton}
+                    </span>
+                `;
+                container.insertAdjacentHTML('beforeend', badge);
+            });
+        }
+
+        /**
+         * Renderiza las opciones para el formulario (checkboxes) y el filtro (select).
+         */
+        function renderCategorySelectors() {
+            const formContainer = document.getElementById('categoryCheckboxes');
+            const filterSelect = document.getElementById('filterCategory');
+            
+            formContainer.innerHTML = '';
+            // El filtro debe incluir la opción "Todos" por defecto, que es el DEFAULT_CATEGORY
+            filterSelect.innerHTML = `<option value="all">${DEFAULT_CATEGORY}</option>`;
+
+            // Renderiza checkboxes para el formulario (excluye el default para la selección)
+            userCategories.filter(c => c !== DEFAULT_CATEGORY).forEach(category => {
+                const isProject = category === PROJECT_CATEGORY;
+                const onchangeHandler = isProject ? `onchange="handleCategoryChange()"` : '';
+
+                const checkbox = `
+                    <div class="flex items-center">
+                        <input type="checkbox" id="cat-${category}" value="${category}" ${onchangeHandler} class="form-checkbox h-4 w-4 text-brand-blue rounded border-gray-300 focus:ring-brand-blue">
+                        <label for="cat-${category}" class="ml-2 text-sm text-gray-700">${category} ${isProject ? ' (Proyecto)' : ''}</label>
+                    </div>
+                `;
+                formContainer.insertAdjacentHTML('beforeend', checkbox);
+            });
+            
+            handleCategoryChange(); 
+
+            // Renderiza opciones para el filtro (incluye todos)
+            userCategories.filter(c => c !== DEFAULT_CATEGORY).forEach(category => {
+                const option = `<option value="${category}">${category}</option>`;
+                filterSelect.insertAdjacentHTML('beforeend', option);
+            });
+        }
+
+
+        // --- FUNCIONES CRUD DE CONTACTOS ---
+
+        function getSelectedCategories() {
+            const checkboxes = document.querySelectorAll('#categoryCheckboxes input[type="checkbox"]:checked');
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+            // Asegurar que "Todos los clientes" siempre esté en el array
+            if (!selected.includes(DEFAULT_CATEGORY)) {
+                 selected.unshift(DEFAULT_CATEGORY);
+            }
+            return selected;
+        }
+
+        function addOrUpdateContact() {
+            if (!state.isLoggedIn) return showCustomMessage('Debes iniciar sesión para guardar contactos.', 'Error', true);
+
+            const firstName = document.getElementById('inputFirstName').value.trim();
+            const lastName = document.getElementById('inputLastName').value.trim();
+            const phone = document.getElementById('inputPhone').value.trim();
+            const address = document.getElementById('inputAddress').value.trim(); 
+            const categories = getSelectedCategories();
+
+            if (!firstName || !phone || !address) {
+                return showCustomMessage('Nombre, Teléfono y Dirección son obligatorios.', 'Error', true);
+            }
+            
+            if (!/^\d{8}$/.test(phone)) {
+                 return showCustomMessage('El teléfono debe tener exactamente 8 dígitos numéricos (formato El Salvador).', 'Error', true);
+            }
+            
+            if (categories.length === 0) {
+                 return showCustomMessage('Debes seleccionar al menos una categoría.', 'Error', true);
+            }
+
+            const isProjectSelected = categories.includes(PROJECT_CATEGORY);
+            const newContact = { 
+                firstName, 
+                lastName, 
+                phone, 
+                address, 
+                categories, 
+            };
+            
+            if (isProjectSelected) {
+                const projectLocation = document.getElementById('inputProjectLocation').value.trim();
+                const projectStatus = document.getElementById('inputProjectStatus').value.trim();
+                
+                if (!projectLocation || !projectStatus) {
+                     return showCustomMessage('Si seleccionas "Proyecto", debes llenar Lugar y Estado.', 'Error', true);
+                }
+
+                newContact.projectLocation = projectLocation;
+                newContact.projectStatus = projectStatus;
+            } else {
+                 // Asegurar que los campos de proyecto no se guarden si la categoría no está seleccionada
+                delete newContact.projectLocation;
+                delete newContact.projectStatus;
+            }
+
+            if (editingIndex > -1) {
+                contacts[editingIndex] = newContact;
+                showCustomMessage(`Contacto ${firstName} ${lastName} actualizado.`, 'Éxito');
+                
+            } else {
+                if (contacts.length >= MAX_CONTACTS) {
+                    return showCustomMessage(`Límite de ${MAX_CONTACTS} contactos alcanzado.`, 'Error', true);
+                }
+                if (contacts.some(c => c.phone === phone)) {
+                    return showCustomMessage(`El teléfono ${phone} ya está registrado.`, 'Error', true);
+                }
+                contacts.unshift(newContact);
+                showCustomMessage(`Contacto ${firstName} ${lastName} agregado.`, 'Éxito');
+            }
+            
+            saveContacts();
+            cancelEdit();
+        }
+
+        function startEditByPhone(phone) {
+            const index = contacts.findIndex(c => c.phone === phone);
+            if (index > -1) {
+                const contact = contacts[index];
+                document.getElementById('inputFirstName').value = contact.firstName;
+                document.getElementById('inputLastName').value = contact.lastName;
+                document.getElementById('inputPhone').value = contact.phone;
+                document.getElementById('inputAddress').value = contact.address; 
+
+                // Setear checkboxes y campos condicionales
+                document.querySelectorAll('#categoryCheckboxes input[type="checkbox"]').forEach(cb => {
+                    const isChecked = contact.categories.includes(cb.value);
+                    cb.checked = isChecked;
+
+                    if (cb.value === PROJECT_CATEGORY) {
+                        if (isChecked) {
+                            document.getElementById('projectFieldsContainer').classList.remove('hidden');
+                            document.getElementById('inputProjectLocation').value = contact.projectLocation || '';
+                            document.getElementById('inputProjectStatus').value = contact.projectStatus || '';
+                        } else {
+                            document.getElementById('projectFieldsContainer').classList.add('hidden');
+                        }
+                    }
+                });
+
+
+                setFormMode('edit', index);
+                
+                // *** IMPLEMENTACIÓN DE NAVEGACIÓN DIRECTA ***
+                document.getElementById('addEditContactSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            } else {
+                showCustomMessage(`Contacto con teléfono ${phone} no encontrado.`, 'Error', true);
+            }
+        }
+
+        function cancelEdit() {
+            setFormMode('add');
+        }
+
+        function setFormMode(mode, index = -1) {
+            editingIndex = index;
+            const title = document.getElementById('formTitle');
+            const button = document.getElementById('addEditButton');
+            const cancelButton = document.getElementById('cancelEditButton');
+            const projectFieldsContainer = document.getElementById('projectFieldsContainer');
+
+            if (mode === 'edit' && index !== -1) {
+                // Título de Edición
+                title.innerHTML = `<span>Editando: ${contacts[index].firstName} ${contacts[index].lastName}</span>`;
+                button.textContent = 'Guardar Cambios';
+                // Estilo de botón para Edición (Cambio a Azul ligeramente más oscuro, sin iconos)
+                button.classList.remove('bg-brand-blue', 'hover:bg-brand-blue/90');
+                button.classList.add('bg-brand-blue', 'hover:bg-brand-blue/90');
+                cancelButton.classList.remove('hidden');
+                document.getElementById('inputPhone').setAttribute('disabled', 'true');
+                document.getElementById('inputPhone').classList.add('bg-gray-100');
+            } else {
+                // Título de Adición (sin iconos)
+                title.innerHTML = `<span>Agregar Nuevo Contacto</span>`;
+                button.textContent = 'Guardar Contacto';
+                // Estilo de botón para Adición
+                button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                button.classList.add('bg-brand-blue', 'hover:bg-brand-blue/90');
+                cancelButton.classList.add('hidden');
+                document.getElementById('inputPhone').removeAttribute('disabled');
+                document.getElementById('inputPhone').classList.remove('bg-gray-100');
+                
+                // Limpiar campos
+                document.getElementById('inputFirstName').value = '';
+                document.getElementById('inputLastName').value = '';
+                document.getElementById('inputPhone').value = '';
+                document.getElementById('inputAddress').value = ''; 
+                document.getElementById('inputProjectLocation').value = '';
+                document.getElementById('inputProjectStatus').value = '';
+                projectFieldsContainer.classList.add('hidden'); 
+                
+                document.querySelectorAll('#categoryCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+            }
+        }
+        
+        function deleteContactByPhone(phone) {
+            const contact = contacts.find(c => c.phone === phone);
+
+            if (!contact) return;
+            const contactName = `${contact.firstName} ${contact.lastName}`;
+
+            showCustomConfirmation(`¿Estás seguro de que quieres eliminar a ${contactName}?`, () => {
+                const finalIndexToDelete = contacts.findIndex(c => c.phone === phone);
+
+                if (finalIndexToDelete > -1) {
+                    contacts.splice(finalIndexToDelete, 1); 
+                    saveContacts();
+                    showCustomMessage(`Contacto eliminado: ${contactName}`, 'Éxito');
+                }
+            });
+        }
+
+        function clearContacts() {
+            showCustomConfirmation(`¿Estás seguro de que quieres eliminar TODOS los ${contacts.length} contactos guardados?`, () => {
+                contacts = [];
+                saveContacts();
+                showCustomMessage(`Lista de contactos eliminada completamente.`, 'Éxito');
+            });
+        }
+
+        // --- FILTRADO Y RENDERIZADO ---
+
+        function filterAndSearchContacts() {
+            const searchTerm = document.getElementById('searchClient').value.toLowerCase().trim();
+            const filterValue = document.getElementById('filterCategory').value;
+            
+            let filteredContacts = contacts;
+
+            if (filterValue !== 'all') { 
+                filteredContacts = filteredContacts.filter(c => 
+                    c.categories && c.categories.includes(filterValue)
+                );
+            }
+
+            if (searchTerm) {
+                filteredContacts = filteredContacts.filter(c => 
+                    c.firstName.toLowerCase().includes(searchTerm) || 
+                    c.lastName.toLowerCase().includes(searchTerm) ||
+                    c.address.toLowerCase().includes(searchTerm) || 
+                    c.phone.includes(searchTerm)
+                );
+            }
+
+            renderFilteredContacts(filteredContacts);
+        }
+
+        function renderFilteredContacts(filteredContacts) {
+            const listContainer = document.getElementById('contactList');
+            listContainer.innerHTML = '';
+            
+            if (filteredContacts.length === 0) {
+                listContainer.innerHTML = '<p class="text-gray-500 italic p-6 text-center">No hay contactos que coincidan con los filtros.</p>';
+                return;
+            }
+
+            filteredContacts.forEach((contact) => {
+                const phoneForAction = contact.phone; 
+                const fullName = `${contact.firstName} ${contact.lastName}`;
+                
+                // Determinar si es un cliente de Proyecto para mostrar el botón de Detalles
+                const isProjectClient = contact.categories.includes(PROJECT_CATEGORY);
+
+                // Mostrar todas las categorías asignadas, excluyendo el default.
+                const categoryBadges = contact.categories
+                    .filter(c => c !== DEFAULT_CATEGORY)
+                    .map(c => {
+                        // Colores consistentes: NARANJA/ÁMBAR (brand-accent) para todas las categorías personalizadas
+                        const style = 'bg-brand-accent/20 text-brand-accent border-brand-accent/40';
+                        return `<span class="text-xs font-medium px-2 py-0.5 rounded-full ${style} truncate border">${c}</span>`; 
+                    })
+                    .join(''); 
+                
+                // Botón de Detalles (visible solo si es Proyecto)
+                const detailsButton = isProjectClient ? `
+                    <button onclick="event.stopPropagation(); showProjectDetailsModal('${phoneForAction}')" 
+                            class="p-2 px-3 text-brand-accent bg-brand-accent/20 hover:bg-brand-accent/30 rounded-lg text-sm font-semibold transition duration-150 shadow-sm border border-brand-accent/30" title="Ver detalles de proyecto">
+                        Detalles
+                    </button>
+                ` : '';
+                
+                // Nuevo formato de fila
+                const item = `
+                    <div class="contact-item flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white hover:bg-gray-50 transition duration-150">
+                        <div class="flex-1 min-w-0 pr-4 w-full">
+                            
+
+<div class="flex items-center space-x-2 mb-1">
+                                <p class="font-bold text-gray-900 text-lg leading-tight truncate">${fullName}</p>
+                                <div class="flex flex-wrap gap-1 flex-shrink-0">
+                                    ${categoryBadges}
+                                </div>
+                            </div>
+                            
+                            
+
+<div class="text-sm text-gray-600 flex flex-wrap gap-x-4">
+                                <span class="font-medium text-brand-blue">${phoneForAction}</span>
+                                <span class="truncate italic text-gray-500">${contact.address}</span>
+                            </div>
+                        </div>
+                        
+                        
+
+<div class="flex space-x-2 flex-shrink-0 mt-4 sm:mt-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100 w-full sm:w-auto justify-end">
+                            ${detailsButton} 
+
+<button onclick="event.stopPropagation(); sendWhatsApp('${phoneForAction}')" 
+                                    class="p-2 px-3 text-brand-success bg-brand-success/20 hover:bg-brand-success/30 rounded-lg text-sm font-semibold transition duration-150 shadow-sm border border-brand-success/50" title="Enviar Mensaje">
+                                Enviar
+                            </button>
+                            
+
+<button onclick="event.stopPropagation(); startEditByPhone('${phoneForAction}')" 
+                                    class="p-2 px-3 text-brand-accent bg-brand-accent/20 hover:bg-brand-accent/30 rounded-lg text-sm font-semibold transition duration-150 shadow-sm border border-brand-accent/30" title="Modificar Contacto">
+                                Modificar
+                            </button>
+                            <button onclick="event.stopPropagation(); deleteContactByPhone('${phoneForAction}')" 
+                                    class="p-2 px-3 text-brand-danger bg-brand-danger/10 hover:bg-brand-danger/20 rounded-lg text-sm font-semibold transition duration-150 shadow-sm border border-brand-danger/30" title="Eliminar Contacto">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                listContainer.insertAdjacentHTML('beforeend', item);
+            });
+        }
+
+
+        // --- FUNCIONES DE ENVÍO DE WHATSAPP ---
+
+        function personalizeMessage(template, contact) {
+            let message = template;
+            message = message.replace(/\{\{Nombre\}\}/g, contact.firstName || '');
+            message = message.replace(/\{\{Apellido\}\}/g, contact.lastName || '');
+            message = message.replace(/\{\{Dirección\}\}/g, contact.address || ''); 
+            
+            return encodeURIComponent(message);
+        }
+
+        function sendWhatsApp(phone) {
+            const template = document.getElementById('messageTemplate').value;
+            const contact = contacts.find(c => c.phone === phone);
+
+            if (!template) {
+                return showCustomMessage('Debes definir un mensaje de plantilla.', 'Error', true);
+            }
+
+            if (!contact) {
+                return showCustomMessage(`Contacto no encontrado para el teléfono ${phone}.`, 'Error', true);
+            }
+            
+            const whatsappPhone = `${SV_COUNTRY_CODE}${phone}`; 
+
+            const personalizedMessage = personalizeMessage(template, contact);
+            const whatsappUrl = `https://web.whatsapp.com/send?phone=${whatsappPhone}&text=${personalizedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+            showCustomMessage(`Abriendo WhatsApp para ${contact.firstName} ${contact.lastName}.`, 'Información');
+        }
+
+
+        // --- DRAG AND DROP ---
+        function dragStart(event, placeholder) {
+            event.dataTransfer.setData("text/plain", placeholder);
+            // Azul para el estado de arrastre
+            event.target.classList.add('opacity-50', 'ring-2', 'ring-brand-blue');
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const placeholder = event.dataTransfer.getData("text/plain");
+            const textarea = document.getElementById('messageTemplate');
+            const startPos = textarea.selectionStart;
+            const endPos = textarea.selectionEnd;
+
+            const newValue = textarea.value.substring(0, startPos)
+                            + placeholder
+                            + textarea.value.substring(endPos, textarea.value.length);
+
+            textarea.value = newValue;
+            
+            document.querySelectorAll('.draggable-item').forEach(el => {
+                el.classList.remove('opacity-50', 'ring-2', 'ring-brand-blue');
+            });
+        }
+        
+        // --- FUNCIONES DE IMPORTACIÓN/EXPORTACIÓN DE DATOS (CSV) ---
+        
+        /**
+         * Exporta todos los contactos (Nombre, Dirección, Teléfono) a un archivo CSV.
+         */
+        function exportContactsToCsv() {
+            if (contacts.length === 0) {
+                return showCustomMessage('No hay contactos para descargar.', 'Aviso', false);
+            }
+
+            let csvContent = "Nombre,Apellido,Telefono,Direccion\n";
+
+            contacts.forEach(contact => {
+                // Función para limpiar y escapar comillas dobles
+                const clean = (str) => `"${(str || '').replace(/"/g, '""')}"`;
+
+                const row = [
+                    clean(contact.firstName),
+                    clean(contact.lastName),
+                    clean(contact.phone),
+                    clean(contact.address),
+                ].join(',');
+                csvContent += row + "\n";
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            
+            if (link.download !== undefined) { 
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", `contactos_wasender_${state.activeUserID || 'anon'}_${Date.now()}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showCustomMessage('¡Contactos descargados con éxito!', 'Éxito', false);
+            } else {
+                showCustomMessage('Tu navegador no soporta la descarga directa de archivos.', 'Error', true);
+            }
+        }
+        
+        /**
+         * Maneja la carga del archivo CSV.
+         */
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+                return showCustomMessage('Solo se aceptan archivos CSV.', 'Error', true);
+            }
+            
+            showCustomMessage('Cargando y procesando archivo. Por favor, espere...', 'Cargando Datos', false);
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const csvText = e.target.result;
+                    importContactsFromCsv(csvText);
+                } catch (error) {
+                    showCustomMessage('Error al leer el archivo.', 'Error', true);
+                    console.error('File Read Error:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        /**
+         * Procesa el texto CSV y fusiona los contactos.
+         */
+        function importContactsFromCsv(csvText) {
+            const lines = csvText.trim().split('\n');
+            if (lines.length < 2) {
+                return showCustomMessage('El archivo CSV está vacío o incompleto.', 'Error', true);
+            }
+            
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
+            const dataLines = lines.slice(1);
+            let addedCount = 0;
+            let skippedCount = 0;
+            const existingPhones = new Set(contacts.map(c => c.phone));
+            
+            const nameIndex = headers.indexOf('nombre');
+            const lastNameIndex = headers.indexOf('apellido');
+            const phoneIndex = headers.indexOf('telefono');
+            const addressIndex = headers.indexOf('direccion');
+
+            if (nameIndex === -1 || phoneIndex === -1 || addressIndex === -1) {
+                 return showCustomMessage('El CSV debe contener las columnas: Nombre, Apellido, Telefono, Direccion.', 'Error', true);
+            }
+
+            dataLines.forEach(line => {
+                const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
+                const parsedValues = values.map(v => v ? v.replace(/^"|"$/g, '').trim() : ''); // Manejo de comillas y valores vacíos
+
+                if (parsedValues.length >= Math.max(nameIndex, lastNameIndex, phoneIndex, addressIndex) + 1) {
+                    const firstName = parsedValues[nameIndex] || '';
+                    const lastName = parsedValues[lastNameIndex] || '';
+                    const phone = (parsedValues[phoneIndex] || '').replace(/\D/g, '');
+                    const address = parsedValues[addressIndex] || '';
+
+                    if (phone.length === 8 && !existingPhones.has(phone) && firstName && address) {
+                        const newContact = {
+                            firstName: firstName,
+                            lastName: lastName,
+                            phone: phone,
+                            address: address,
+                            categories: [DEFAULT_CATEGORY], 
+                        };
+                        contacts.push(newContact);
+                        existingPhones.add(phone);
+                        addedCount++;
+                    } else {
+                        skippedCount++;
+                    }
+                } else {
+                    skippedCount++; 
+                }
+            });
+
+            saveContacts();
+            document.getElementById('csvFileInput').value = ''; 
+            showCustomMessage(`Proceso de fusión finalizado. Agregados: ${addedCount}. Saltados (Duplicados/Inválidos): ${skippedCount}.`, 'Fusión Exitosa', false);
+        }
+
+        // --- INICIALIZACIÓN ---
+
+        window.onload = function() {
+            const persistedID = localStorage.getItem(CURRENT_USER_ID_KEY);
+            if (persistedID) {
+                const users = loadUsers();
+                const user = users[persistedID];
+                
+                if (user) {
+                    state.activeUserID = persistedID;
+                    state.activeUser = user;
+                    state.isLoggedIn = true;
+                } else {
+                    localStorage.removeItem(CURRENT_USER_ID_KEY);
+                }
+            }
+            
+            renderApp();
+
+            document.querySelectorAll('.draggable-item').forEach(el => {
+                el.addEventListener('dragend', (e) => {
+                    e.target.classList.remove('opacity-50', 'ring-2', 'ring-brand-blue');
+                });
+            });
+        };
+
+    </script>
+</body>
+</html>
