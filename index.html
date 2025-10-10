@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adonay Tobar WA</title>
+    <title>WA Sender - Categorías de Color Suave</title>
     
 
 <script src="https://cdn.tailwindcss.com"></script>
@@ -28,6 +28,19 @@
         .contact-item:hover {
             background-color: #F9FAFB;
         }
+        
+        /* Ocultar el scroll del body y mantener el scroll solo si es necesario para el contenido total */
+        html, body {
+            overflow-x: hidden;
+        }
+        
+        /* Clase especial para aplicar colores dinámicos a los badges */
+        /* Nota: el color de fondo se define con el alfa (transparencia) en JS para un efecto suave */
+        .color-badge {
+            background-color: var(--badge-bg-color);
+            color: var(--badge-text-color);
+            border-color: var(--badge-border-color);
+        }
     </style>
     <script>
         tailwind.config = {
@@ -48,13 +61,13 @@
         }
     </script>
 </head>
-<body class="p-4 min-h-screen flex items-start justify-center">
+<body class="min-h-screen flex flex-col items-center p-4">
 
     
 
-<div id="crm-app-container" class="max-w-8xl w-full bg-white shadow-2xl border border-gray-100 rounded-xl p-8 space-y-8 mt-6 hidden">
+<div id="crm-app-container" class="max-w-7xl w-full mx-auto bg-white shadow-2xl border border-gray-100 rounded-xl p-8 space-y-8 mt-6 hidden">
         
-        <!-- NUEVO: BARRA DE NAVEGACIÓN SUPERIOR PROFESIONAL -->
+        <!-- BARRA DE NAVEGACIÓN SUPERIOR PROFESIONAL -->
         <nav class="flex justify-between items-center py-4 border-b border-gray-100">
             <!-- Logo -->
             <h1 class="text-3xl font-extrabold text-gray-900">
@@ -75,7 +88,7 @@
             </div>
         </nav>
         
-        <!-- NUEVO: BANNER DE BIENVENIDA PROFESIONAL -->
+        <!-- BANNER DE BIENVENIDA PROFESIONAL -->
         <div class="bg-brand-blue/10 p-4 rounded-lg border border-brand-blue/30 shadow-inner">
             <p class="text-md font-medium text-gray-700">
                 Hola <span id="currentUserName" class="text-brand-blue font-extrabold">Usuario</span>, un gusto tenerte de nuevo.
@@ -92,29 +105,40 @@
 
 <div class="lg:col-span-1 space-y-6">
                     
-                    
-
-<div class="card p-6 rounded-xl space-y-3 bg-white shadow-xl border border-gray-200">
+                    <!-- 1. Administrar Categorías -->
+                    <div class="card p-6 rounded-xl space-y-3 bg-white shadow-xl border border-gray-200">
                         <h2 class="text-xl font-bold text-gray-800 border-b pb-2">
                             Administrar Categorías
                         </h2>
-                        <div class="flex space-x-2">
+                        
+                        
+
+<div class="flex space-x-2">
                             <input type="text" id="newCategoryName" placeholder="Nueva categoría (Ej: VIP)"
                                    class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+                            <input type="color" id="newCategoryColor" value="#2C5282" title="Color de Etiqueta"
+                                   class="h-10 w-10 p-1 border border-gray-300 rounded-lg shadow-sm cursor-pointer"/>
                             <button onclick="addCategory()"
                                     class="p-3 rounded-lg bg-brand-blue text-white font-semibold text-sm hover:bg-brand-blue/90 transition duration-200 shadow-md">
                                 Crear
                             </button>
                         </div>
-                        <div id="categoryBadges" class="flex flex-wrap gap-2 pt-3">
-                            
+
+                        
+                        <div class="pt-3">
+                            <div class="flex flex-wrap gap-2 mb-3" id="categoryBadges">
+                                
 
 </div>
+                            <button onclick="openCategoryEditModal()" 
+                                    class="w-full text-sm font-semibold px-3 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg border border-gray-300 transition duration-200">
+                                Editar Nombre y Color
+                            </button>
+                        </div>
                     </div>
 
-                    
-
-<div id="addEditContactSection" class="card p-6 rounded-xl space-y-4 bg-white shadow-xl border border-gray-200">
+                    <!-- 2. Agregar/Editar Contacto -->
+                    <div id="addEditContactSection" class="card p-6 rounded-xl space-y-4 bg-white shadow-xl border border-gray-200">
                         <h2 id="formTitle" class="text-xl font-bold text-gray-800 border-b pb-2">
                             Agregar Nuevo Contacto
                         </h2>
@@ -126,8 +150,8 @@
                         <input type="text" id="inputLastName" placeholder="Apellido"
                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
                         
-
-<input type="text" id="inputPhone" placeholder="Teléfono (8 dígitos, ej: 78451234)"
+                        
+                        <input type="text" id="inputPhone" placeholder="Teléfono (8 dígitos, ej: 78451234)"
                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
                         
                         
@@ -170,9 +194,8 @@
                         </div>
                     </div>
 
-                    
-
-<div class="card p-6 rounded-xl space-y-3 bg-white shadow-xl border border-gray-200">
+                    <!-- 3. Plantilla de Mensaje -->
+                    <div class="card p-6 rounded-xl space-y-3 bg-white shadow-xl border border-gray-200">
                         <h2 class="text-xl font-bold text-gray-800 border-b pb-2">
                             Plantilla de Mensaje
                         </h2>
@@ -199,45 +222,9 @@
                                   ondragover="allowDrop(event)" ondrop="drop(event)"
                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-success focus:border-brand-success transition duration-150 shadow-inner"></textarea>
                     </div>
-                </div>
 
-                
-
-<div class="lg:col-span-2 space-y-6">
-                    
-
-<div class="card p-6 rounded-xl space-y-4 bg-white shadow-xl border border-gray-200">
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <h2 class="text-xl font-bold text-gray-800">
-                                Contactos
-                            </h2>
-                            <button onclick="clearContacts()" class="text-sm text-brand-danger hover:text-red-700 font-semibold transition">
-                                Limpiar Todos
-                            </button>
-                        </div>
-
-                        
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <input type="text" id="searchClient" oninput="filterAndSearchContacts()" placeholder="Buscar por Nombre/Teléfono..."
-                                   class="col-span-2 p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
-                            <select id="filterCategory" onchange="filterAndSearchContacts()"
-                                    class="col-span-1 p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm bg-white">
-                                
-
-</select>
-                        </div>
-
-                        
-
-<div id="contactList" class="bg-white border border-gray-200 rounded-lg shadow-inner max-h-[600px] overflow-y-auto mt-4 divide-y divide-gray-100">
-                            <p class="text-gray-500 italic p-6 text-center">Aún no hay contactos registrados.</p>
-                        </div>
-                    </div>
-                    
-                    
-
-<div class="card p-6 rounded-xl space-y-4 bg-white shadow-xl border border-gray-200">
+                    <!-- 4. Portabilidad (CSV) - MOVIMIENTO SOLICITADO -->
+                    <div class="card p-6 rounded-xl space-y-4 bg-white shadow-xl border border-gray-200">
                         <h2 class="text-xl font-bold text-gray-800 border-b pb-2">
                             Portabilidad (CSV)
                         </h2>
@@ -260,6 +247,42 @@
                             </button>
                         </div>
                     </div>
+                </div>
+
+                
+
+<div class="lg:col-span-2 space-y-6">
+                    <!-- 5. Lista de Contactos (Panel Principal) -->
+                    <div class="card p-6 rounded-xl space-y-4 bg-white shadow-xl border border-gray-200">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h2 class="text-xl font-bold text-gray-800">
+                                Contactos
+                            </h2>
+                            <button onclick="clearContacts()" class="text-sm text-brand-danger hover:text-red-700 font-semibold transition">
+                                Limpiar Todos
+                            </button>
+                        </div>
+
+                        
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <input type="text" id="searchClient" oninput="filterAndSearchContacts()" placeholder="Buscar por Nombre/Teléfono..."
+                                   class="col-span-2 p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+                            <select id="filterCategory" onchange="filterAndSearchContacts()"
+                                    class="col-span-1 p-3 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm bg-white">
+                                
+
+</select>
+                        </div>
+
+                        
+                        <!-- Contenedor de lista de contactos sin scroll fijo -->
+                        <div id="contactList" class="bg-white border border-gray-200 rounded-lg shadow-inner mt-4 divide-y divide-gray-100">
+                            <p class="text-gray-500 italic p-6 text-center">Aún no hay contactos registrados.</p>
+                        </div>
+                    </div>
+                    
+                    
                 </div>
             </div>
         </div>
@@ -311,9 +334,10 @@
         </div>
     </div>
 
-    
-
-<div id="auth-app-container" class="max-w-md w-full bg-white shadow-2xl border border-gray-100 rounded-xl p-8 space-y-6 mt-20">
+    <!-- CONTENEDOR DE AUTENTICACIÓN (CENTRADO HORIZONTAL Y VERTICALMENTE) -->
+    <div id="auth-app-container" 
+         class="max-w-md w-full bg-white shadow-2xl border border-gray-100 rounded-xl p-8 space-y-6 
+                fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 hidden"> 
         <header class="text-center space-y-2">
             <h1 class="text-3xl font-extrabold text-gray-900">
                 Bienvenido a <span class="text-brand-blue">WA Sender</span>
@@ -444,6 +468,36 @@
         </div>
     </div>
 
+    <!-- MODAL DE EDICIÓN DE CATEGORÍAS (NUEVO) -->
+    <div id="categoryEditModal" class="fixed inset-0 z-50 hidden items-center justify-center transition-opacity duration-300 bg-gray-900 bg-opacity-70 backdrop-blur-sm">
+        <div class="bg-white rounded-xl p-8 w-11/12 max-w-lg shadow-2xl border-t-4 border-brand-blue transform scale-100 transition-transform duration-300 space-y-6">
+            <h3 class="text-2xl font-bold text-gray-900 border-b pb-2">
+                Editar Categorías
+            </h3>
+            
+            <div id="editableCategoryList" class="space-y-4 max-h-80 overflow-y-auto pr-2">
+                <!-- Lista de categorías editables se inyecta aquí -->
+            </div>
+
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeCategoryEditModal()"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-300 transition shadow-md">
+                    Cerrar
+                </button>
+                <button onclick="saveEditedCategories()"
+                        class="px-4 py-2 bg-brand-blue text-white text-sm font-semibold rounded-lg hover:bg-brand-blue/90 transition shadow-md">
+                    Guardar Todo
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FOOTER SOLICITADO -->
+    <footer class="w-full mt-8 p-4 text-center text-sm text-gray-500 border-t border-gray-200 max-w-7xl mx-auto">
+        Adonay Tobar &copy; 2025
+    </footer>
+
+
     <script>
         // --- VARIABLES GLOBALES Y CONSTANTES ---
         const USERS_KEY = 'galvanissaCrmUsers';
@@ -451,8 +505,12 @@
         const CATEGORIES_SUFFIX = '_categories';
         const DOMAIN_REQUIRED = '@galvanissa.com';
         const MAX_CONTACTS = 200;
-        const DEFAULT_CATEGORY = 'Todos los clientes';
-        const PROJECT_CATEGORY = 'Proyecto';
+        
+        // El nombre de la categoría por defecto
+        const DEFAULT_CATEGORY_NAME = 'Todos los clientes'; 
+        // El objeto de categoría por defecto (no se puede eliminar, color gris)
+        const DEFAULT_CATEGORY = { name: DEFAULT_CATEGORY_NAME, color: '#9CA3AF' }; 
+        const PROJECT_CATEGORY_NAME = 'Proyecto';
         const SV_COUNTRY_CODE = '503'; 
 
         // Estado de la aplicación
@@ -464,6 +522,7 @@
         };
 
         let contacts = [];         
+        // userCategories es ahora un array de objetos: [{name: 'VIP', color: '#00FF00'}, ...]
         let userCategories = [];   
         let editingIndex = -1;     
         let modalCallback = null;  
@@ -491,6 +550,7 @@
                 
                 showCustomMessage(`Sesión iniciada como ${state.activeUser.username}.`, 'Información', false);
             } else {
+                // Centrar el formulario de autenticación
                 crmContainer.classList.add('hidden');
                 authContainer.classList.remove('hidden');
                 showAuthTab('login');
@@ -506,22 +566,20 @@
             const mainContent = document.getElementById('main-crm-content');
             const profileView = document.getElementById('view-profile');
             const profileButton = document.getElementById('profileButton');
-            const welcomeBanner = document.querySelector('.bg-brand-blue\\/10'); // Seleccionar el banner de bienvenida
+            const welcomeBanner = document.querySelector('.bg-brand-blue\\/10'); 
 
             if (state.isProfileView) {
                 mainContent.classList.add('hidden');
                 profileView.classList.remove('hidden');
-                welcomeBanner.classList.add('hidden'); // Ocultar banner de bienvenida
+                welcomeBanner.classList.add('hidden');
                 
-                // Aplicar el estilo de botón activo/seleccionado (azul solido)
                 profileButton.classList.remove('bg-blue-50', 'text-brand-blue', 'hover:text-white', 'border-blue-100');
                 profileButton.classList.add('bg-brand-blue', 'text-white', 'hover:bg-brand-blue/90', 'border-transparent');
             } else {
                 mainContent.classList.remove('hidden');
                 profileView.classList.add('hidden');
-                welcomeBanner.classList.remove('hidden'); // Mostrar banner de bienvenida
+                welcomeBanner.classList.remove('hidden');
                 
-                // Aplicar el estilo de botón inactivo (transparente)
                 profileButton.classList.remove('bg-brand-blue', 'text-white', 'hover:bg-brand-blue/90', 'border-transparent');
                 profileButton.classList.add('bg-blue-50', 'text-brand-blue', 'hover:text-white', 'border-blue-100');
             }
@@ -531,10 +589,13 @@
          * Maneja la visibilidad de los campos condicionales "Proyecto".
          */
         function handleCategoryChange() {
-            const projectCheckbox = document.getElementById(`cat-${PROJECT_CATEGORY}`);
+            const projectCheckbox = document.getElementById(`cat-${PROJECT_CATEGORY_NAME}`);
             const fieldsContainer = document.getElementById('projectFieldsContainer');
             
-            if (!projectCheckbox) return; 
+            if (!projectCheckbox) {
+                fieldsContainer.classList.add('hidden');
+                return;
+            } 
 
             if (projectCheckbox.checked) {
                 fieldsContainer.classList.remove('hidden');
@@ -625,9 +686,19 @@
                 const storedCategories = localStorage.getItem(key);
                 let loaded = storedCategories ? JSON.parse(storedCategories) : [];
                 
-                loaded = loaded.filter(c => c !== DEFAULT_CATEGORY);
+                // Asegurar que DEFAULT_CATEGORY existe y que la lista no contenga duplicados por nombre
+                let map = new Map();
+                map.set(DEFAULT_CATEGORY.name, DEFAULT_CATEGORY);
+
+                loaded.forEach(cat => {
+                    // Si el objeto no tiene color (versiones antiguas), usar un color por defecto
+                    if (!cat.color) cat.color = '#10B981'; 
+                    map.set(cat.name, cat);
+                });
                 
-                userCategories = [DEFAULT_CATEGORY, ...loaded];
+                userCategories = Array.from(map.values());
+                userCategories = userCategories.filter(c => c.name !== DEFAULT_CATEGORY_NAME); // Excluir temporalmente el default
+                userCategories.unshift(DEFAULT_CATEGORY); // Poner el default al inicio
 
                 renderCategoryManagement();
                 renderCategorySelectors();
@@ -642,7 +713,8 @@
              if (!state.activeUserID) return;
              const key = getCategoriesStorageKey();
              try {
-                 const categoriesToSave = userCategories.filter(c => c !== DEFAULT_CATEGORY);
+                 // Guardar solo las categorías no por defecto
+                 const categoriesToSave = userCategories.filter(c => c.name !== DEFAULT_CATEGORY_NAME);
                  localStorage.setItem(key, JSON.stringify(categoriesToSave));
                  renderCategoryManagement();
                  renderCategorySelectors();
@@ -652,8 +724,39 @@
              }
         }
 
+        // --- FUNCIONES DE UTILIDAD PARA COLORES ---
+        
+        /**
+         * Añade un canal alfa (opacidad) a un código hexadecimal.
+         * Usamos '33' para un 20% de opacidad.
+         */
+        function addOpacityToHex(hex, opacity = '33') {
+            if (!hex || hex.length !== 7 || hex[0] !== '#') return hex;
+            // Retorna HEX + Opacidad
+            return hex + opacity;
+        }
 
-        // --- SEGURIDAD Y AUTENTICACIÓN ---
+        /**
+         * Calcula si el color es claro u oscuro para elegir el color de texto.
+         */
+        function isColorDark(hex) {
+            const color = hex.substring(1); 
+            const r = parseInt(color.substring(0, 2), 16);
+            const g = parseInt(color.substring(2, 4), 16);
+            const b = parseInt(color.substring(4, 6), 16);
+            // Fórmula Luma para determinar la luminosidad
+            const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; 
+            return luma < 120; // Si es menor a 120, se considera oscuro
+        }
+
+        /**
+         * Obtiene el objeto de categoría por nombre.
+         */
+        function getCategoryByName(name) {
+             return userCategories.find(c => c.name === name);
+        }
+
+        // --- SEGURIDAD Y AUTENTICACIÓN (MISMO CÓDIGO) ---
         
         /**
          * Muestra las credenciales en la consola para el administrador.
@@ -776,7 +879,7 @@
             input.type = input.type === 'password' ? 'text' : 'password';
         }
 
-        // --- GESTIÓN DE PERFIL DE USUARIO ---
+        // --- GESTIÓN DE PERFIL DE USUARIO (MISMO CÓDIGO) ---
 
         function loadProfileEditor() {
             if (state.activeUser) {
@@ -787,7 +890,7 @@
         }
         
         /**
-         * Muestra la contraseña guardada en el modal (transparencia).
+         * Muestra las credenciales guardadas en el modal (transparencia).
          */
         function showSavedPassword() {
             if (state.activeUser && state.activeUser.password) {
@@ -818,7 +921,6 @@
                 const users = loadUsers();
                 const currentID = state.activeUserID; 
 
-                // Si cambia el email, se debe actualizar la clave, si no, se usa la clave actual
                 const oldEmail = state.activeUser.email;
                 const newID = (newEmail !== oldEmail) ? newEmail : currentID;
 
@@ -829,7 +931,6 @@
                     state.activeUser.password = newPassword; 
                 }
 
-                // Si la clave cambia, eliminar la vieja entrada
                 if (newID !== currentID) {
                     delete users[currentID];
                     localStorage.setItem(CURRENT_USER_ID_KEY, newID);
@@ -849,7 +950,7 @@
         }
 
 
-        // --- MODAL UTILITIES (Reemplazando logMessage y alerts) ---
+        // --- MODAL UTILITIES (MISMO CÓDIGO) ---
 
         /**
          * Muestra un mensaje simple (no de confirmación) en el modal.
@@ -913,7 +1014,7 @@
         function showProjectDetailsModal(phone) {
             const contact = contacts.find(c => c.phone === phone);
 
-            if (!contact || !contact.categories.includes(PROJECT_CATEGORY)) {
+            if (!contact || !contact.categories.includes(PROJECT_CATEGORY_NAME)) {
                 return showCustomMessage('Este cliente no tiene detalles de proyecto.', 'Aviso', false);
             }
 
@@ -936,40 +1037,67 @@
         }
 
 
-        // --- GESTIÓN DE CATEGORÍAS ---
+        // --- GESTIÓN DE CATEGORÍAS (ACTUALIZADO) ---
+        
+        /**
+         * Obtiene la lista de nombres de categorías para los contactos.
+         */
+        function getCategoryNames() {
+            return userCategories.map(c => c.name);
+        }
 
         function addCategory() {
             const name = document.getElementById('newCategoryName').value.trim();
+            const color = document.getElementById('newCategoryColor').value;
+            
             if (!name) {
                 return showCustomMessage('El nombre de la categoría no puede estar vacío.', 'Error', true);
             }
-            if (userCategories.map(c => c.toLowerCase()).includes(name.toLowerCase())) {
+            if (getCategoryNames().map(n => n.toLowerCase()).includes(name.toLowerCase())) {
                 return showCustomMessage(`La categoría "${name}" ya existe.`, 'Error', true);
             }
+            
+            // Nueva categoría como objeto
+            const newCategory = { name: name, color: color };
+            
+            // Si el default está en la posición 0, añadir después
+            if (userCategories[0] && userCategories[0].name === DEFAULT_CATEGORY_NAME) {
+                 userCategories.splice(1, 0, newCategory);
+            } else {
+                 userCategories.push(newCategory);
+            }
+            
 
-            userCategories.push(name);
             saveUserCategories();
             document.getElementById('newCategoryName').value = '';
             showCustomMessage(`Categoría "${name}" creada.`, 'Éxito');
         }
-
+        
+        /**
+         * Elimina una categoría por su nombre. (Modificado para permitir la eliminación)
+         */
         function removeCategory(nameToRemove) {
-            if (nameToRemove === DEFAULT_CATEGORY) {
+            if (nameToRemove === DEFAULT_CATEGORY_NAME) {
+                // Mensaje de error para la categoría por defecto
                 return showCustomMessage('La categoría "Todos los clientes" no puede eliminarse.', 'Error', true);
             }
 
-            showCustomConfirmation(`¿Estás seguro de eliminar la categoría "${nameToRemove}"? Los clientes asociados NO se eliminarán.`, () => {
+            showCustomConfirmation(`¿Estás seguro de eliminar la categoría "${nameToRemove}"? Los clientes asociados NO se eliminarán, pero perderán esta etiqueta.`, () => {
                 
-                userCategories = userCategories.filter(c => c !== nameToRemove);
+                // 1. Eliminar la categoría de la lista de categorías
+                userCategories = userCategories.filter(c => c.name !== nameToRemove);
 
+                // 2. Eliminar la categoría de todos los contactos que la tenían
                 contacts = contacts.map(contact => {
                     contact.categories = contact.categories.filter(cat => cat !== nameToRemove);
                     
+                    // Asegurar que siempre tenga la categoría por defecto si se queda sin ninguna
                     if (contact.categories.length === 0) {
-                        contact.categories.push(DEFAULT_CATEGORY);
+                        contact.categories.push(DEFAULT_CATEGORY_NAME);
                     }
                     
-                    if (nameToRemove === PROJECT_CATEGORY) {
+                    // Limpiar campos de proyecto si se elimina la categoría Proyecto
+                    if (nameToRemove === PROJECT_CATEGORY_NAME) {
                         delete contact.projectLocation;
                         delete contact.projectStatus;
                     }
@@ -980,6 +1108,11 @@
                 saveContacts();
                 saveUserCategories();
                 showCustomMessage(`Categoría "${nameToRemove}" eliminada.`, 'Éxito');
+                
+                // Si el modal está abierto, re-renderizar la lista de edición
+                if (!document.getElementById('categoryEditModal').classList.contains('hidden')) {
+                    openCategoryEditModal();
+                }
             });
         }
         
@@ -991,20 +1124,21 @@
             container.innerHTML = '';
 
             userCategories.forEach(category => {
-                const isDefault = category === DEFAULT_CATEGORY;
-                const deleteButton = isDefault ? '' : `
-                    <button onclick="removeCategory('${category}')" 
-                            class="ml-1 text-red-400 hover:text-red-600 font-bold transition">
-                        ✕
-                    </button>`;
+                const isDefault = category.name === DEFAULT_CATEGORY_NAME;
                 
-                // Estilo único para badges de categorías personalizadas (Azul transparente)
-                const style = isDefault ? 'bg-gray-100 text-gray-700 border-gray-300' : 'bg-brand-blue/10 text-brand-blue border-brand-blue/30';
+                // Color de texto: negro si el fondo es claro, blanco si es oscuro
+                const textColor = isColorDark(category.color) ? '#FFFFFF' : '#333333';
+                // Color de fondo: aplicar opacidad para suavizar
+                const bgColorWithOpacity = addOpacityToHex(category.color);
+                
+                // El borde debe ser más opaco para dar definición
+                const borderColor = category.color; 
+                
+                const style = `--badge-bg-color: ${bgColorWithOpacity}; --badge-text-color: ${textColor}; --badge-border-color: ${borderColor};`;
 
                 const badge = `
-                    <span class="flex items-center text-xs font-semibold px-3 py-1 rounded-full ${style} border">
-                        ${category}
-                        ${deleteButton}
+                    <span class="color-badge flex items-center text-xs font-semibold px-3 py-1 rounded-full border shadow-sm" style="${style}">
+                        ${category.name}
                     </span>
                 `;
                 container.insertAdjacentHTML('beforeend', badge);
@@ -1019,41 +1153,146 @@
             const filterSelect = document.getElementById('filterCategory');
             
             formContainer.innerHTML = '';
-            // El filtro debe incluir la opción "Todos" por defecto, que es el DEFAULT_CATEGORY
-            filterSelect.innerHTML = `<option value="all">${DEFAULT_CATEGORY}</option>`;
+            // El filtro debe incluir la opción "Todos" por defecto
+            filterSelect.innerHTML = `<option value="${DEFAULT_CATEGORY_NAME}">${DEFAULT_CATEGORY_NAME}</option>`;
 
             // Renderiza checkboxes para el formulario (excluye el default para la selección)
-            userCategories.filter(c => c !== DEFAULT_CATEGORY).forEach(category => {
-                const isProject = category === PROJECT_CATEGORY;
+            userCategories.filter(c => c.name !== DEFAULT_CATEGORY_NAME).forEach(category => {
+                const isProject = category.name === PROJECT_CATEGORY_NAME;
                 const onchangeHandler = isProject ? `onchange="handleCategoryChange()"` : '';
 
                 const checkbox = `
                     <div class="flex items-center">
-                        <input type="checkbox" id="cat-${category}" value="${category}" ${onchangeHandler} class="form-checkbox h-4 w-4 text-brand-blue rounded border-gray-300 focus:ring-brand-blue">
-                        <label for="cat-${category}" class="ml-2 text-sm text-gray-700">${category} ${isProject ? ' (Proyecto)' : ''}</label>
+                        <input type="checkbox" id="cat-${category.name}" value="${category.name}" ${onchangeHandler} class="form-checkbox h-4 w-4 text-brand-blue rounded border-gray-300 focus:ring-brand-blue" style="accent-color: ${category.color};">
+                        <label for="cat-${category.name}" class="ml-2 text-sm text-gray-700">${category.name} ${isProject ? ' (Proyecto)' : ''}</label>
                     </div>
                 `;
                 formContainer.insertAdjacentHTML('beforeend', checkbox);
+                // NOTA: 'accent-color' se usa para cambiar el color del checkbox
             });
             
             handleCategoryChange(); 
 
             // Renderiza opciones para el filtro (incluye todos)
-            userCategories.filter(c => c !== DEFAULT_CATEGORY).forEach(category => {
-                const option = `<option value="${category}">${category}</option>`;
+            userCategories.filter(c => c.name !== DEFAULT_CATEGORY_NAME).forEach(category => {
+                const option = `<option value="${category.name}">${category.name}</option>`;
                 filterSelect.insertAdjacentHTML('beforeend', option);
             });
         }
+        
+        /**
+         * Abre el modal para editar nombres y colores de categorías.
+         */
+        function openCategoryEditModal() {
+            const container = document.getElementById('editableCategoryList');
+            container.innerHTML = '';
+
+            // Solo mostrar categorías editables (excluir DEFAULT_CATEGORY)
+            userCategories.filter(c => c.name !== DEFAULT_CATEGORY_NAME).forEach(category => {
+                const item = `
+                    <div class="flex space-x-3 items-center p-3 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
+                        <input type="color" id="edit-color-${category.name}" value="${category.color}" 
+                               class="h-10 w-10 p-1 border border-gray-300 rounded-lg shadow-sm cursor-pointer flex-shrink-0" />
+                        
+                        <input type="text" id="edit-name-${category.name}" value="${category.name}" data-old-name="${category.name}"
+                               placeholder="Nombre de la categoría"
+                               class="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 ring-brand-blue focus:border-brand-blue text-sm shadow-sm" />
+                        
+                        <button onclick="removeCategory('${category.name}')"
+                                class="p-2 bg-brand-danger text-white rounded-lg hover:bg-red-600 transition duration-150 flex-shrink-0" title="Eliminar Categoría">
+                            ✕
+                        </button>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', item);
+            });
+            
+            if (container.innerHTML === '') {
+                 container.innerHTML = '<p class="text-gray-500 italic text-center p-4">No hay categorías personalizadas para editar. Crea una nueva primero.</p>';
+            }
+
+            document.getElementById('categoryEditModal').classList.remove('hidden');
+            document.getElementById('categoryEditModal').classList.add('flex');
+        }
+
+        /**
+         * Cierra el modal de edición de categorías.
+         */
+        function closeCategoryEditModal() {
+            document.getElementById('categoryEditModal').classList.add('hidden');
+            document.getElementById('categoryEditModal').classList.remove('flex');
+            // Re-renderizar por si se cambió algo
+            renderCategoryManagement();
+            renderCategorySelectors();
+            filterAndSearchContacts(); 
+        }
+
+        /**
+         * Guarda los cambios realizados en el modal de edición de categorías.
+         */
+        function saveEditedCategories() {
+            const categoryElements = document.getElementById('editableCategoryList').children;
+            const newCategories = [DEFAULT_CATEGORY];
+            const nameMap = new Map();
+            let hasError = false;
+
+            // 1. Validar y construir la nueva lista
+            Array.from(categoryElements).forEach(div => {
+                const colorInput = div.querySelector('input[type="color"]');
+                const nameInput = div.querySelector('input[type="text"]');
+
+                if (!nameInput) return; // Salta si es el mensaje de no hay categorías
+                
+                const newName = nameInput.value.trim();
+                const oldName = nameInput.getAttribute('data-old-name');
+                const newColor = colorInput.value;
+
+                if (!newName) {
+                    showCustomMessage(`El nombre de la categoría no puede estar vacío.`, 'Error de Edición', true);
+                    hasError = true;
+                    return;
+                }
+
+                if (nameMap.has(newName) && newName !== oldName) {
+                    showCustomMessage(`El nombre "${newName}" está duplicado.`, 'Error de Edición', true);
+                    hasError = true;
+                    return;
+                }
+                
+                nameMap.set(newName, true);
+
+                // Agregar a la lista de nuevas categorías
+                newCategories.push({ name: newName, color: newColor });
+
+                // 2. Actualizar los contactos si el nombre cambió
+                if (newName !== oldName) {
+                    contacts = contacts.map(c => {
+                        c.categories = c.categories.map(cat => cat === oldName ? newName : cat);
+                        return c;
+                    });
+                }
+            });
+
+            if (hasError) return;
+
+            // 3. Reemplazar la lista global y guardar
+            userCategories = newCategories;
+            saveContacts(); 
+            saveUserCategories(); 
+
+            showCustomMessage('Categorías y contactos actualizados con éxito.', 'Éxito', false);
+            closeCategoryEditModal();
+        }
 
 
-        // --- FUNCIONES CRUD DE CONTACTOS ---
+        // --- FUNCIONES CRUD DE CONTACTOS (MISMO CÓDIGO con ajuste de CATEGORY_NAME) ---
 
         function getSelectedCategories() {
             const checkboxes = document.querySelectorAll('#categoryCheckboxes input[type="checkbox"]:checked');
             const selected = Array.from(checkboxes).map(cb => cb.value);
-            // Asegurar que "Todos los clientes" siempre esté en el array
-            if (!selected.includes(DEFAULT_CATEGORY)) {
-                 selected.unshift(DEFAULT_CATEGORY);
+            // Asegurar que DEFAULT_CATEGORY_NAME siempre esté en el array
+            if (!selected.includes(DEFAULT_CATEGORY_NAME)) {
+                 selected.unshift(DEFAULT_CATEGORY_NAME);
             }
             return selected;
         }
@@ -1076,10 +1315,23 @@
             }
             
             if (categories.length === 0) {
+                 // Esto no debería pasar si DEFAULT_CATEGORY_NAME se añade en getSelectedCategories, pero es una buena práctica.
                  return showCustomMessage('Debes seleccionar al menos una categoría.', 'Error', true);
             }
 
-            const isProjectSelected = categories.includes(PROJECT_CATEGORY);
+            const isProjectSelected = categories.includes(PROJECT_CATEGORY_NAME);
+            
+            if (editingIndex > -1) {
+                const oldPhone = contacts[editingIndex].phone;
+                if (oldPhone !== phone && contacts.some((c, i) => i !== editingIndex && c.phone === phone)) {
+                    return showCustomMessage(`El nuevo teléfono ${phone} ya está en uso por otro contacto.`, 'Error', true);
+                }
+            } else {
+                 if (contacts.some(c => c.phone === phone)) {
+                    return showCustomMessage(`El teléfono ${phone} ya está registrado.`, 'Error', true);
+                }
+            }
+
             const newContact = { 
                 firstName, 
                 lastName, 
@@ -1112,9 +1364,7 @@
                 if (contacts.length >= MAX_CONTACTS) {
                     return showCustomMessage(`Límite de ${MAX_CONTACTS} contactos alcanzado.`, 'Error', true);
                 }
-                if (contacts.some(c => c.phone === phone)) {
-                    return showCustomMessage(`El teléfono ${phone} ya está registrado.`, 'Error', true);
-                }
+                
                 contacts.unshift(newContact);
                 showCustomMessage(`Contacto ${firstName} ${lastName} agregado.`, 'Éxito');
             }
@@ -1129,7 +1379,7 @@
                 const contact = contacts[index];
                 document.getElementById('inputFirstName').value = contact.firstName;
                 document.getElementById('inputLastName').value = contact.lastName;
-                document.getElementById('inputPhone').value = contact.phone;
+                document.getElementById('inputPhone').value = contact.phone; 
                 document.getElementById('inputAddress').value = contact.address; 
 
                 // Setear checkboxes y campos condicionales
@@ -1137,7 +1387,7 @@
                     const isChecked = contact.categories.includes(cb.value);
                     cb.checked = isChecked;
 
-                    if (cb.value === PROJECT_CATEGORY) {
+                    if (cb.value === PROJECT_CATEGORY_NAME) {
                         if (isChecked) {
                             document.getElementById('projectFieldsContainer').classList.remove('hidden');
                             document.getElementById('inputProjectLocation').value = contact.projectLocation || '';
@@ -1151,7 +1401,6 @@
 
                 setFormMode('edit', index);
                 
-                // *** IMPLEMENTACIÓN DE NAVEGACIÓN DIRECTA ***
                 document.getElementById('addEditContactSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             } else {
@@ -1169,27 +1418,27 @@
             const button = document.getElementById('addEditButton');
             const cancelButton = document.getElementById('cancelEditButton');
             const projectFieldsContainer = document.getElementById('projectFieldsContainer');
+            const inputPhone = document.getElementById('inputPhone');
 
             if (mode === 'edit' && index !== -1) {
-                // Título de Edición
                 title.innerHTML = `<span>Editando: ${contacts[index].firstName} ${contacts[index].lastName}</span>`;
                 button.textContent = 'Guardar Cambios';
-                // Estilo de botón para Edición (Cambio a Azul ligeramente más oscuro, sin iconos)
                 button.classList.remove('bg-brand-blue', 'hover:bg-brand-blue/90');
                 button.classList.add('bg-brand-blue', 'hover:bg-brand-blue/90');
                 cancelButton.classList.remove('hidden');
-                document.getElementById('inputPhone').setAttribute('disabled', 'true');
-                document.getElementById('inputPhone').classList.add('bg-gray-100');
+                
+                // Permitir edición de teléfono
+                inputPhone.removeAttribute('disabled');
+                inputPhone.classList.remove('bg-gray-100');
             } else {
-                // Título de Adición (sin iconos)
                 title.innerHTML = `<span>Agregar Nuevo Contacto</span>`;
                 button.textContent = 'Guardar Contacto';
-                // Estilo de botón para Adición
                 button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
                 button.classList.add('bg-brand-blue', 'hover:bg-brand-blue/90');
                 cancelButton.classList.add('hidden');
-                document.getElementById('inputPhone').removeAttribute('disabled');
-                document.getElementById('inputPhone').classList.remove('bg-gray-100');
+                
+                inputPhone.removeAttribute('disabled');
+                inputPhone.classList.remove('bg-gray-100');
                 
                 // Limpiar campos
                 document.getElementById('inputFirstName').value = '';
@@ -1229,7 +1478,7 @@
             });
         }
 
-        // --- FILTRADO Y RENDERIZADO ---
+        // --- FILTRADO Y RENDERIZADO (ACTUALIZADO para usar CATEGORY_NAME) ---
 
         function filterAndSearchContacts() {
             const searchTerm = document.getElementById('searchClient').value.toLowerCase().trim();
@@ -1237,7 +1486,7 @@
             
             let filteredContacts = contacts;
 
-            if (filterValue !== 'all') { 
+            if (filterValue !== DEFAULT_CATEGORY_NAME) { 
                 filteredContacts = filteredContacts.filter(c => 
                     c.categories && c.categories.includes(filterValue)
                 );
@@ -1268,16 +1517,30 @@
                 const phoneForAction = contact.phone; 
                 const fullName = `${contact.firstName} ${contact.lastName}`;
                 
-                // Determinar si es un cliente de Proyecto para mostrar el botón de Detalles
-                const isProjectClient = contact.categories.includes(PROJECT_CATEGORY);
+                const isProjectClient = contact.categories.includes(PROJECT_CATEGORY_NAME);
 
-                // Mostrar todas las categorías asignadas, excluyendo el default.
+                // Mapear categorías a badges con colores dinámicos
                 const categoryBadges = contact.categories
-                    .filter(c => c !== DEFAULT_CATEGORY)
-                    .map(c => {
-                        // Colores consistentes: NARANJA/ÁMBAR (brand-accent) para todas las categorías personalizadas
-                        const style = 'bg-brand-accent/20 text-brand-accent border-brand-accent/40';
-                        return `<span class="text-xs font-medium px-2 py-0.5 rounded-full ${style} truncate border">${c}</span>`; 
+                    .filter(cName => cName !== DEFAULT_CATEGORY_NAME)
+                    .map(cName => {
+                        const category = getCategoryByName(cName);
+                        if (!category) return ''; 
+
+                        const color = category.color;
+                        // El color de fondo lleva la opacidad (transparencia)
+                        const bgColorWithOpacity = addOpacityToHex(color);
+                        // El texto es el color sólido
+                        const textColor = color;
+                        const borderColor = color;
+
+
+                        const style = `--badge-bg-color: ${bgColorWithOpacity}; --badge-text-color: ${textColor}; --badge-border-color: ${borderColor};`;
+
+                        return `
+                            <span class="color-badge text-xs font-medium px-2 py-0.5 rounded-full border truncate" style="${style}">
+                                ${cName}
+                            </span>
+                        `;
                     })
                     .join(''); 
                 
@@ -1289,7 +1552,7 @@
                     </button>
                 ` : '';
                 
-                // Nuevo formato de fila
+                // Renderizado del ítem de contacto
                 const item = `
                     <div class="contact-item flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white hover:bg-gray-50 transition duration-150">
                         <div class="flex-1 min-w-0 pr-4 w-full">
@@ -1337,7 +1600,7 @@
         }
 
 
-        // --- FUNCIONES DE ENVÍO DE WHATSAPP ---
+        // --- FUNCIONES DE ENVÍO DE WHATSAPP (MISMO CÓDIGO) ---
 
         function personalizeMessage(template, contact) {
             let message = template;
@@ -1370,7 +1633,7 @@
         }
 
 
-        // --- DRAG AND DROP ---
+        // --- DRAG AND DROP (MISMO CÓDIGO) ---
         function dragStart(event, placeholder) {
             event.dataTransfer.setData("text/plain", placeholder);
             // Azul para el estado de arrastre
@@ -1399,7 +1662,7 @@
             });
         }
         
-        // --- FUNCIONES DE IMPORTACIÓN/EXPORTACIÓN DE DATOS (CSV) ---
+        // --- FUNCIONES DE IMPORTACIÓN/EXPORTACIÓN DE DATOS (CSV) (MISMO CÓDIGO con ajuste de CATEGORY_NAME) ---
         
         /**
          * Exporta todos los contactos (Nombre, Dirección, Teléfono) a un archivo CSV.
@@ -1507,7 +1770,7 @@
                             lastName: lastName,
                             phone: phone,
                             address: address,
-                            categories: [DEFAULT_CATEGORY], 
+                            categories: [DEFAULT_CATEGORY_NAME], 
                         };
                         contacts.push(newContact);
                         existingPhones.add(phone);
